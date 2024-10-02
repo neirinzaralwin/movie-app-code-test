@@ -12,6 +12,14 @@ class PopularMoviesWidget extends StatefulWidget {
 }
 
 class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
+  final bloc = PopularMoviesBloc();
+
+  @override
+  void initState() {
+    bloc.add(GetPopularMovies());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,7 +33,7 @@ class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
         SizedBox(
           height: 200.0,
           child: BlocBuilder<PopularMoviesBloc, PopularMoviesState>(
-              bloc: BlocProvider.of<PopularMoviesBloc>(context)..add(const GetPopularMovies()),
+              bloc: bloc,
               builder: (context, state) {
                 if (state is PopularMoviesLoading) {
                   return const Center(child: CircularProgressIndicator.adaptive());
@@ -59,7 +67,7 @@ class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
                               bottom: 0,
                               left: 0,
                               child: Text(
-                                movie.title!,
+                                movie.title ?? "",
                                 overflow: TextOverflow.ellipsis,
                               ).bodyMedium.white,
                             ),

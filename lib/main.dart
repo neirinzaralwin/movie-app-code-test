@@ -6,9 +6,9 @@ import 'package:flutter_movie_code_test/constants/app_const.dart';
 import 'package:flutter_movie_code_test/logic/blocs/bloc/popular_movies_bloc.dart';
 import 'screens/home/home_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  appConfig(isProduction: false);
+  await appConfig(isProduction: false);
   runApp(const MyApp());
 }
 

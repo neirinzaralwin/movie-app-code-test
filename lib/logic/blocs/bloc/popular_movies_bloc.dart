@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_movie_code_test/data/models/popular_movies/popular_movies.dart';
+import 'package:flutter_movie_code_test/data/dto/popular_movies/popular_movies_model.dart';
 import 'package:flutter_movie_code_test/data/repositories/movie/movie_repository.dart';
 
 part 'popular_movies_event.dart';
