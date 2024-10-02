@@ -4,6 +4,7 @@ import 'package:flutter_movie_code_test/configs/app_config.dart';
 import 'package:flutter_movie_code_test/configs/app_theme.dart';
 import 'package:flutter_movie_code_test/constants/app_const.dart';
 import 'package:flutter_movie_code_test/logic/blocs/popular_movies/popular_movies_bloc.dart';
+import 'package:flutter_movie_code_test/logic/blocs/wishlist/wishlist_bloc.dart';
 import 'configs/app_routes.dart';
 
 void main() async {
@@ -18,7 +19,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => PopularMoviesBloc())],
+        providers: [
+          BlocProvider(create: (context) => PopularMoviesBloc()),
+          BlocProvider(create: (context) => WishlistBloc())
+        ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: AppConst.appName,
