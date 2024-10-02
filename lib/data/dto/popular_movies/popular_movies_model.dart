@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter_movie_code_test/constants/api_const.dart';
+import 'package:flutter_movie_code_test/services/save_image_service.dart';
 
-PopularMovies popularMoviesFromJson(String str) => PopularMovies.fromJson(json.decode(str));
+Future<PopularMovies> popularMoviesFromJson(String str) async =>
+    await PopularMovies.fromJsonAsync(json.decode(str));
 
 String popularMoviesToJson(PopularMovies data) => json.encode(data.toJson());
 
@@ -19,15 +21,22 @@ class PopularMovies {
     this.totalPopularMovieResults,
   });
 
-  factory PopularMovies.fromJson(Map<String, dynamic> json) => PopularMovies(
-        page: json["page"],
-        results: json["results"] == null
-            ? []
-            : List<PopularMovieResult>.from(
-                json["results"]!.map((x) => PopularMovieResult.fromJson(x))),
-        totalPages: json["total_pages"],
-        totalPopularMovieResults: json["total_results"],
+  static Future<PopularMovies> fromJsonAsync(Map<String, dynamic> json) async {
+    List<PopularMovieResult> results = [];
+    if (json["results"] != null) {
+      results = await Future.wait(
+        json["results"]!
+            .map<Future<PopularMovieResult>>((x) => PopularMovieResult.fromJsonAsync(x)),
       );
+    }
+
+    return PopularMovies(
+      page: json["page"],
+      results: results,
+      totalPages: json["total_pages"],
+      totalPopularMovieResults: json["total_results"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "page": page,
@@ -46,7 +55,7 @@ class PopularMovieResult {
   final String? originalTitle;
   final String? overview;
   final double? popularity;
-  final String? posterPath;
+  String? posterPath;
   final String? releaseDate;
   final String? title;
   final int? video;
@@ -70,23 +79,50 @@ class PopularMovieResult {
     this.voteCount,
   });
 
-  factory PopularMovieResult.fromJson(Map<String, dynamic> json) => PopularMovieResult(
-        adult: json["adult"] == true ? 1 : 0,
-        backdropPath: json["backdrop_path"],
-        genreIds: json["genre_ids"] == null ? [] : List<int>.from(json["genre_ids"]!.map((x) => x)),
-        id: json["id"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
-        overview: json["overview"],
-        popularity: json["popularity"]?.toDouble(),
-        posterPath:
-            json["poster_path"] != null ? '${ApiConst.imagePath}${json["poster_path"]}' : null,
-        releaseDate: json["release_date"],
-        title: json["title"],
-        video: json["video"] == true ? 1 : 0,
-        voteAverage: json["vote_average"]?.toDouble(),
-        voteCount: json["vote_count"],
-      );
+  static Future<PopularMovieResult> fromJsonAsync(Map<String, dynamic> json) async {
+    String? posterPath;
+    final service = SaveImageService();
+
+    if (json["poster_path"] != null) {
+      posterPath = await service.saveToDir('${ApiConst.imagePath}${json["poster_path"]}');
+    }
+
+    return PopularMovieResult(
+      adult: json["adult"] == true ? 1 : 0,
+      backdropPath: json["backdrop_path"],
+      genreIds: json["genre_ids"] == null ? [] : List<int>.from(json["genre_ids"]!.map((x) => x)),
+      id: json["id"],
+      originalLanguage: json["original_language"],
+      originalTitle: json["original_title"],
+      overview: json["overview"],
+      popularity: json["popularity"]?.toDouble(),
+      posterPath: posterPath,
+      releaseDate: json["release_date"],
+      title: json["title"],
+      video: json["video"] == true ? 1 : 0,
+      voteAverage: json["vote_average"]?.toDouble(),
+      voteCount: json["vote_count"],
+    );
+  }
+
+  factory PopularMovieResult.fromJson(Map<String, dynamic> json) {
+    return PopularMovieResult(
+      adult: json["adult"] == true ? 1 : 0,
+      backdropPath: json["backdrop_path"],
+      genreIds: json["genre_ids"] == null ? [] : List<int>.from(json["genre_ids"]!.map((x) => x)),
+      id: json["id"],
+      originalLanguage: json["original_language"],
+      originalTitle: json["original_title"],
+      overview: json["overview"],
+      popularity: json["popularity"]?.toDouble(),
+      posterPath: json["poster_path"],
+      releaseDate: json["release_date"],
+      title: json["title"],
+      video: json["video"] == true ? 1 : 0,
+      voteAverage: json["vote_average"]?.toDouble(),
+      voteCount: json["vote_count"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "adult": adult,

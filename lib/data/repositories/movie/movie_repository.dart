@@ -7,7 +7,7 @@ class MovieRepository {
     final local = MovieDatasource();
     try {
       final result = await RepoSingeleton.movie.getPopularMovies();
-      final model = PopularMovies.fromJson(result);
+      PopularMovies model = await PopularMovies.fromJsonAsync(result);
       await local.insertOrReplace(model);
     } catch (_) {}
     return local.getPopularMovies();

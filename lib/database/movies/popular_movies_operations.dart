@@ -6,9 +6,15 @@ class PopularMoviesOperations {
 
   PopularMoviesOperations({required this.db});
 
-  Future<void> createTable() async {
-    const createTableQuery = '''
-    CREATE TABLE popular_movies (
+  Future<void> createTables() async {
+    await db.transaction((txn) async {
+      await txn.execute(_createPopularMoviesTableQuery());
+      await txn.execute(_createPaginatedMoviesTableQuery());
+    });
+  }
+
+  String _createPopularMoviesTableQuery() => '''
+    CREATE TABLE IF NOT EXISTS popular_movies (
         id INTEGER PRIMARY KEY,
         title TEXT,
         overview TEXT,
@@ -21,81 +27,78 @@ class PopularMoviesOperations {
         original_language TEXT,
         adult INTEGER,
         video INTEGER
-      );
-    ''';
-    await db.execute(createTableQuery);
-    const createPaginatedTable = '''
-    CREATE TABLE paginated_popular_movies (
+    );
+  ''';
+
+  String _createPaginatedMoviesTableQuery() => '''
+    CREATE TABLE IF NOT EXISTS paginated_popular_movies (
         id INTEGER PRIMARY KEY,
         page INTEGER,
         total_pages INTEGER,
         total_popular_movie_results INTEGER
-      );
-    ''';
-    await db.execute(createPaginatedTable);
-  }
+    );
+  ''';
 
-  // get paginated popular movies
   Future<Map<String, dynamic>> getPaginatedPopularMovies() async {
-    final List<Map<String, dynamic>> result =
-        await db.rawQuery('SELECT * FROM paginated_popular_movies');
+    final result = await db.query('paginated_popular_movies');
     return result.isNotEmpty ? result.first : {};
   }
 
-  Future<List<Map<String, dynamic>>> getPopularMovieTable() async {
-    return await db.rawQuery('SELECT * FROM popular_movies');
+  Future<List<Map<String, dynamic>>> getPopularMovies() async {
+    return await db.query('popular_movies');
   }
 
-  Future<void> insertOrReplace(PopularMovies model) async {
-    final List<PopularMovieResult> dataList = model.results!;
+  Future<void> insertOrReplaceMovies(PopularMovies model) async {
+    await db.transaction((txn) async {
+      final batch = txn.batch();
 
-    final batch = db.batch();
-    for (var e in dataList) {
-      batch.rawInsert('''
-      INSERT OR REPLACE INTO popular_movies (
-        id,
-        title,
-        overview,
-        poster_path,
-        backdrop_path,
-        release_date,
-        vote_average,
-        vote_count,
-        popularity,
-        original_language,
-        adult,
-        video
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      ''', [
-        e.id,
-        e.title,
-        e.overview,
-        e.posterPath,
-        e.backdropPath,
-        e.releaseDate,
-        e.voteAverage,
-        e.voteCount,
-        e.popularity,
-        e.originalLanguage,
-        e.adult,
-        e.video,
-      ]);
+      _batchInsertPopularMovies(batch, model.results ?? []);
+
+      _batchInsertPaginatedMovies(batch, model);
+
+      await batch.commit(noResult: true);
+    });
+  }
+
+  Future<void> _batchInsertPopularMovies(Batch batch, List<PopularMovieResult> movies) async {
+    // final saveService = SaveImageService();
+
+    for (var movie in movies) {
+      // final savedPosterPath = await saveService.saveToDir(movie.posterPath ?? '');
+      // final savedBackdropPath = await saveService.saveToDir(movie.backdropPath ?? '');
+
+      batch.insert(
+        'popular_movies',
+        {
+          'id': movie.id,
+          'title': movie.title,
+          'overview': movie.overview,
+          'poster_path': movie.posterPath,
+          'backdrop_path': movie.backdropPath,
+          'release_date': movie.releaseDate,
+          'vote_average': movie.voteAverage,
+          'vote_count': movie.voteCount,
+          'popularity': movie.popularity,
+          'original_language': movie.originalLanguage,
+          'adult': movie.adult,
+          'video': movie.video,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     }
+  }
 
-    batch.rawInsert('''
-    INSERT OR REPLACE INTO paginated_popular_movies (
-      id,
-      page,
-      total_pages,
-      total_popular_movie_results
-    ) VALUES (?, ?, ?, ?)
-    ''', [
-      1,
-      model.page,
-      model.totalPages,
-      model.totalPopularMovieResults,
-    ]);
-
-    await batch.commit(noResult: true);
+  // Private method to insert or replace paginated movie metadata
+  void _batchInsertPaginatedMovies(Batch batch, PopularMovies model) {
+    batch.insert(
+      'paginated_popular_movies',
+      {
+        'id': 1,
+        'page': model.page,
+        'total_pages': model.totalPages,
+        'total_popular_movie_results': model.totalPopularMovieResults,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

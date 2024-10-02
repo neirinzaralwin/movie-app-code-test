@@ -32,6 +32,6 @@ class DbConfig {
   }
 
   Future _onCreate(Database db, int version) async {
-    await PopularMoviesOperations(db: db).createTable();
+    await PopularMoviesOperations(db: db).createTables();
   }
 }

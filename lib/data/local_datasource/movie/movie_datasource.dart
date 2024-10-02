@@ -4,7 +4,7 @@ import 'package:flutter_movie_code_test/singeletons/db_sgl.dart';
 class MovieDatasource {
   Future<PopularMovies> getPopularMovies() async {
     final operation = DbSingeleton.popularMovies;
-    final movieList = await operation.getPopularMovieTable();
+    final movieList = await operation.getPopularMovies();
     final paginatedTable = await operation.getPaginatedPopularMovies();
 
     return PopularMovies(
@@ -16,6 +16,6 @@ class MovieDatasource {
 
   Future<void> insertOrReplace(PopularMovies model) async {
     final operation = DbSingeleton.popularMovies;
-    await operation.insertOrReplace(model);
+    await operation.insertOrReplaceMovies(model);
   }
 }

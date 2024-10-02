@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie_code_test/constants/api_const.dart';
 import 'package:flutter_movie_code_test/core/custom_text_styles.dart';
-import 'package:flutter_movie_code_test/logic/blocs/bloc/popular_movies_bloc.dart';
+import 'package:flutter_movie_code_test/logic/blocs/popular_movies/popular_movies_bloc.dart';
 
 class PopularMoviesWidget extends StatefulWidget {
   const PopularMoviesWidget({super.key});
@@ -54,23 +55,24 @@ class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
                       return Container(
                         margin: const EdgeInsets.only(right: 10.0),
                         width: 120.0,
-                        child: Stack(
+                        child: Column(
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
-                              child: Image.network(
-                                "${ApiConst.imagePath}${movie.posterPath}",
+                              child: Image.file(
+                                File(movie.posterPath ?? ''),
                                 fit: BoxFit.cover,
+                                width: 120.0,
+                                height: 160.0,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error);
+                                },
                               ),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              child: Text(
-                                movie.title ?? "",
-                                overflow: TextOverflow.ellipsis,
-                              ).bodyMedium.white,
-                            ),
+                            Text(
+                              movie.title ?? "",
+                              overflow: TextOverflow.ellipsis,
+                            ).bodyMedium.white,
                           ],
                         ),
                       );

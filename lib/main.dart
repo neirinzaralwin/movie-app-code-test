@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_code_test/configs/app_config.dart';
 import 'package:flutter_movie_code_test/configs/app_theme.dart';
 import 'package:flutter_movie_code_test/constants/app_const.dart';
-import 'package:flutter_movie_code_test/logic/blocs/bloc/popular_movies_bloc.dart';
+import 'package:flutter_movie_code_test/logic/blocs/popular_movies/popular_movies_bloc.dart';
 import 'screens/home/home_screen.dart';
 
 void main() async {
