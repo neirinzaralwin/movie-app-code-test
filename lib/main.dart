@@ -4,7 +4,7 @@ import 'package:flutter_movie_code_test/configs/app_config.dart';
 import 'package:flutter_movie_code_test/configs/app_theme.dart';
 import 'package:flutter_movie_code_test/constants/app_const.dart';
 import 'package:flutter_movie_code_test/logic/blocs/popular_movies/popular_movies_bloc.dart';
-import 'screens/home/home_screen.dart';
+import 'configs/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,9 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: AppConst.appName,
           theme: appThemeData,
-          home: const HomeScreen(),
+          // home: const HomeScreen(),
+          initialRoute: '/',
+          routes: routes,
         ));
   }
 }
