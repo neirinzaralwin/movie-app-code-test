@@ -12,4 +12,14 @@ class MovieRepository {
     } catch (_) {}
     return local.getPopularMovies();
   }
+
+  Future<List<PopularMovieResult>> getUpcomingMovies() async {
+    final local = MovieDatasource();
+    try {
+      final result = await RepoSingeleton.movie.getUpcomingMovies();
+      PopularMovies model = await PopularMovies.fromJsonAsync(result);
+      await local.insertOrReplaceUpcomingMovies(model);
+    } catch (_) {}
+    return local.getUpcomingMovies();
+  }
 }

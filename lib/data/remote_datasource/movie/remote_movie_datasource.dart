@@ -9,4 +9,7 @@ abstract class RemoteMovieDatasource {
 
   @GET(ApiConst.getPopularMovies)
   Future<dynamic> getPopularMovies();
+
+  @GET(ApiConst.getUpcommingMovies)
+  Future<dynamic> getUpcomingMovies();
 }
