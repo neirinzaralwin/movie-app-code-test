@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: AppConst.appName,
           theme: appThemeData,
-          // home: const HomeScreen(),
           initialRoute: '/',
           routes: routes,
         ));
