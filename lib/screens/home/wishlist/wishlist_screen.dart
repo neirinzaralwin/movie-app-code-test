@@ -53,12 +53,20 @@ class _WishlistScreenState extends State<WishlistScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(movie.title ?? '').bodyLargeBold.white,
-                                  Text(movie.releaseDate ?? '').bodyMedium,
-                                ],
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title ?? '',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ).bodyLargeBold.white,
+                                    Text(movie.releaseDate ?? '',
+                                            maxLines: 2, overflow: TextOverflow.ellipsis)
+                                        .bodyMedium,
+                                  ],
+                                ),
                               ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0),
