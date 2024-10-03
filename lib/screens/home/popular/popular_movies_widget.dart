@@ -119,7 +119,7 @@ class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
                                         if (favIdList.contains(movie.id)) {
                                           favIdList.remove(movie.id);
                                           context.read<WishlistBloc>().add(
-                                                RemoveWishListEvent(id: movie.id!, isReload: true),
+                                                RemoveWishListEvent(movie: movie, isReload: true),
                                               );
                                         } else {
                                           favIdList.add(movie.id!);
@@ -141,8 +141,6 @@ class _PopularMoviesWidgetState extends State<PopularMoviesWidget> {
                                             ),
                                           );
                                         }
-
-                                        debugPrint("tapped");
                                       },
                                     ),
                                   ),

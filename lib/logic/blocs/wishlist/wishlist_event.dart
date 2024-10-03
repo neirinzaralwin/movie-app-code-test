@@ -20,11 +20,11 @@ final class InsertWishListEvent extends WishlistEvent {
 }
 
 final class RemoveWishListEvent extends WishlistEvent {
-  final int id;
+  final PopularMovieResult movie;
   final bool? isReload;
 
-  const RemoveWishListEvent({required this.id, this.isReload = true});
+  const RemoveWishListEvent({required this.movie, this.isReload = true});
 
   @override
-  List<Object> get props => [id, isReload!];
+  List<Object> get props => [movie, isReload!];
 }

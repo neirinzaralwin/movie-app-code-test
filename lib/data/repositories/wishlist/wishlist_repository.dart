@@ -10,7 +10,7 @@ class WishlistRepository {
     await WishlistDatasource().insertOrReplace(movie);
   }
 
-  Future<void> remove(int id) async {
-    await WishlistDatasource().remove(id);
+  Future<void> remove(PopularMovieResult movie) async {
+    await WishlistDatasource().remove(movie);
   }
 }

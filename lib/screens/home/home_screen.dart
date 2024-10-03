@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_code_test/constants/app_color.dart';
+import 'package:flutter_movie_code_test/logic/blocs/popular_movies/popular_movies_bloc.dart';
+import 'package:flutter_movie_code_test/logic/blocs/wishlist/wishlist_bloc.dart';
 import 'home_appbar.dart';
 import 'popular/popular_movies_widget.dart';
 
@@ -14,12 +18,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: homeAppBar(context),
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: PopularMoviesWidget(),
-            ),
-          ],
+        body: RefreshIndicator(
+          onRefresh: _refreshMovies,
+          color: AppColor.grey,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: PopularMoviesWidget(),
+              ),
+            ],
+          ),
         ));
+  }
+
+  Future<void> _refreshMovies() async {
+    context.read<WishlistBloc>().add(GetWishListEvent());
+    context.read<PopularMoviesBloc>().add(GetPopularMovies());
+    await Future.delayed(Duration(seconds: 1));
+    return Future.value();
   }
 }
