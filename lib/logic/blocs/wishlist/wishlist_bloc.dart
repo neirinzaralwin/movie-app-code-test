@@ -20,6 +20,20 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
           emit(WishlistError("Getting wishlist failed : $e"));
         }
       }
+
+      if (event is InsertWishListEvent) {
+        await wishlistRepo.insert(event.movie);
+        if (event.isReload ?? true) {
+          add(GetWishListEvent());
+        }
+      }
+
+      if (event is RemoveWishListEvent) {
+        await wishlistRepo.remove(event.id);
+        if (event.isReload ?? true) {
+          add(GetWishListEvent());
+        }
+      }
     });
   }
 }

@@ -84,7 +84,8 @@ class PopularMovieResult {
     final service = SaveImageService();
 
     if (json["poster_path"] != null) {
-      posterPath = await service.saveToDir('${ApiConst.imagePath}${json["poster_path"]}');
+      posterPath =
+          await service.saveToDir('${ApiConst.imagePath}${json["poster_path"]}', "popular_movies");
     }
 
     return PopularMovieResult(

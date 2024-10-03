@@ -65,6 +65,7 @@ class WishlistMoviesOperations {
   }
 
   Future<void> deleteMovie(int id) async {
+    // delete single movie from wishlist
     await db.delete(
       'wishlist_movies',
       where: 'id = ?',

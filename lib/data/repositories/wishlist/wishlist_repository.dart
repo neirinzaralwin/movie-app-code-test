@@ -3,7 +3,14 @@ import 'package:flutter_movie_code_test/data/local_datasource/wishlist/wishlist_
 
 class WishlistRepository {
   Future<List<PopularMovieResult>> getWishlistMovies() async {
-    final local = WishlistDatasource();
-    return local.getWishlistMovies();
+    return WishlistDatasource().getWishlistMovies();
+  }
+
+  Future<void> insert(PopularMovieResult movie) async {
+    await WishlistDatasource().insertOrReplace(movie);
+  }
+
+  Future<void> remove(int id) async {
+    await WishlistDatasource().remove(id);
   }
 }

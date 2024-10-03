@@ -5,10 +5,10 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class SaveImageService {
-  Future<String> saveToDir(String imgUrl) async {
+  Future<String> saveToDir(String imgUrl, String folderName) async {
     try {
       final appDir = await getApplicationDocumentsDirectory();
-      final imageDir = Directory(path.join(appDir.path, "popular_images"));
+      final imageDir = Directory(path.join(appDir.path, folderName));
       if (!imageDir.existsSync()) {
         await imageDir.create(recursive: true);
       }
@@ -31,10 +31,10 @@ class SaveImageService {
   }
 
   // Delete all image files from the "popular_images" directory
-  Future<void> deleteAllFiles() async {
+  Future<void> deleteAllFiles(String folderName) async {
     try {
       final appDir = await getApplicationDocumentsDirectory();
-      final dir = Directory(path.join(appDir.path, "popular_images"));
+      final dir = Directory(path.join(appDir.path, folderName));
 
       if (dir.existsSync()) {
         dir.deleteSync(recursive: true);
