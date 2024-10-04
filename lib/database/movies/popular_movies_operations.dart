@@ -101,4 +101,9 @@ class PopularMoviesOperations {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
+  Future<void> deleteAllPopularMovies() async {
+    await db.delete('paginated_popular_movies');
+    await db.delete('popular_movies');
+  }
 }

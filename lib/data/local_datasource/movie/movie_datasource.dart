@@ -21,13 +21,23 @@ class MovieDatasource {
         totalPopularMovieResults: paginatedTable['total_popular_movie_results']);
   }
 
-  Future<void> insertOrReplace(PopularMovies model) async {
+  Future<void> insertOrReplacePopularMovies(PopularMovies model) async {
     final operation = DbSingeleton.popularMovies;
     await operation.insertOrReplaceMovies(model);
+  }
+
+  Future<void> deleteAllPopularMovies() async {
+    final operation = DbSingeleton.popularMovies;
+    await operation.deleteAllPopularMovies();
   }
 
   Future<void> insertOrReplaceUpcomingMovies(PopularMovies model) async {
     final operation = DbSingeleton.upcomingMovies;
     await operation.insertOrReplaceMovies(model);
+  }
+
+  Future<void> deleteAllUpcomingMovies() async {
+    final operation = DbSingeleton.upcomingMovies;
+    await operation.deleteAllUpcomingMovies();
   }
 }

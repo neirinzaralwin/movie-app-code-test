@@ -8,7 +8,8 @@ class MovieRepository {
     try {
       final result = await RepoSingeleton.movie.getPopularMovies();
       PopularMovies model = await PopularMovies.fromJsonAsync(result);
-      await local.insertOrReplace(model);
+      await local.deleteAllPopularMovies();
+      await local.insertOrReplacePopularMovies(model);
     } catch (_) {}
     return local.getPopularMovies();
   }
@@ -18,6 +19,7 @@ class MovieRepository {
     try {
       final result = await RepoSingeleton.movie.getUpcomingMovies();
       PopularMovies model = await PopularMovies.fromJsonAsync(result);
+      await local.deleteAllUpcomingMovies();
       await local.insertOrReplaceUpcomingMovies(model);
     } catch (_) {}
     return local.getUpcomingMovies();

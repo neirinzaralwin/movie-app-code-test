@@ -63,4 +63,8 @@ class UpcomingMoviesOperations {
       );
     }
   }
+
+  Future<void> deleteAllUpcomingMovies() async {
+    await db.delete('upcoming_movies');
+  }
 }

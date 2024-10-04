@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioConfig {
   final String baseUrl;
@@ -12,13 +11,13 @@ class DioConfig {
     _dio = Dio(BaseOptions(baseUrl: baseUrl, headers: {"Authorization": "Bearer $token"}));
 
     if (kDebugMode) {
-      _dio.interceptors.add(PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseBody: false,
-          responseHeader: true,
-          error: true,
-          compact: true));
+      // _dio.interceptors.add(PrettyDioLogger(
+      //     requestHeader: true,
+      //     requestBody: true,
+      //     responseBody: false,
+      //     responseHeader: true,
+      //     error: true,
+      //     compact: true));
     }
     _dio.interceptors.add(InterceptorsWrapper(onResponse: (response, handler) {
       handler.next(response);
